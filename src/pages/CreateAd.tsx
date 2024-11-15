@@ -34,7 +34,15 @@ const GET_ALL_CATEGORIES = gql`
 
 const CreateAd = () => {
    const navigate = useNavigate();
-   const { register, handleSubmit, formState: { errors }  } = useForm<FormValues>();
+   const { register, handleSubmit, formState: { errors }  } = useForm<FormValues>({defaultValues: {
+      title: "Titre de mon annonce",
+      description: "Description de mon annonce",
+      category: 6,
+      price: 10,
+      picturesUrl: ["https://picsum.photos/200"],
+      location: "Ma ville",
+      owner: "C'est moi"
+   }});
    
    const { loading, error, data: getAllCategoriesData } = useQuery(GET_ALL_CATEGORIES);
 
@@ -51,7 +59,7 @@ const CreateAd = () => {
                   description: formData.description,
                   category: formData.category,
                   price: Number(formData.price),
-                  picturesUrl: [formData.picturesUrl],
+                  picturesUrl: formData.picturesUrl,
                   location: formData.location,
                   owner: formData.owner,
                   createdAt: formData.createdAt + "T00:00:00.000Z",
