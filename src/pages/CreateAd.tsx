@@ -1,5 +1,4 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { CategoryProps } from "../components/Category";
 import { useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form"
 import { toast } from "react-toastify";
@@ -34,16 +33,15 @@ const GET_ALL_CATEGORIES = gql`
 `;
 
 const CreateAd = () => {
-   const { register, handleSubmit, formState: { errors } } = useForm<FormValues>();
+   const navigate = useNavigate();
+   const { register, handleSubmit, formState: { errors }  } = useForm<FormValues>();
    
    const { loading, error, data: getAllCategoriesData } = useQuery(GET_ALL_CATEGORIES);
 
    const [createNewAd] = useMutation(CREATE_AD);
    if (loading) return 'Submitting...';
    if (error) return `Submission error! ${error.message}`;
-
-   const navigate = useNavigate();
-
+   
    const onSubmit: SubmitHandler<FormValues> = async (formData) => {
       try {
          await createNewAd({
@@ -64,7 +62,7 @@ const CreateAd = () => {
          toast.success("Annonce créée avec succès !");
          navigate("/");
       } catch (err) {
-         console.error("Error creating ad:", err);
+         console.error("Erreur lors de la création de l'annonce :", errors, err);
          toast.error("Une erreur est survenue !");
       }
    
