@@ -18,9 +18,9 @@ export type AdCardProps = {
 }
 
 const AdCard = ({ id, title, picture, category, price }: AdCardProps) => {
+   
    const handleDelete = async () => {
       console.log("Supprimé");
-      
    };
 
    return (

@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import RecentAds from "./components/RecentAds";
 import Layout from "./pages/Layout";
-// import About from "./pages/About";
-// import AdDetails from "./pages/AdDetails";
+import About from "./pages/About";
+import AdDetails from "./pages/AdDetails";
 // import Furnishings from "./pages/Furnishings";
 // import ElectricalAppliances from "./pages/ElectricalAppliances";
 // import Photography from "./pages/Photography";
@@ -24,6 +24,7 @@ import Layout from "./pages/Layout";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import CategoryPage from "./pages/CategoryPage";
+import CreateAd from "./pages/CreateAd";
 
 function App() {
 	return (
@@ -31,13 +32,13 @@ function App() {
 			<Routes>
 				<Route path="/" element={<Layout />}>
 					<Route index element={<RecentAds />} />
-					{/* <Route path="about" element={<About />} />
-					<Route path="ad/:id" element={<AdDetails />} /> */}
-					{/* <Route path="ad/search/:keyword" element={<SearchAdPage />} />
+					<Route path="about" element={<About />} />
+					<Route path="ad/:id" element={<AdDetails />} />
+					{/* <Route path="ad/search/:keyword" element={<SearchAdPage />} /> */}
 					<Route path="ad/new" element={<CreateAd />} />
-					<Route path="ad/edit/:id" element={<EditAd />} />
-					<Route path="category/new" element={<CreateCategory />} /> */}
-					{/* <Route path="category/furnishings" element={<Furnishings />} />
+					{/*<Route path="ad/edit/:id" element={<EditAd />} />
+					<Route path="category/new" element={<CreateCategory />} />
+					 <Route path="category/furnishings" element={<Furnishings />} />
 					<Route path="category/electrical-appliances" element={<ElectricalAppliances />} />
 					<Route path="category/photography" element={<Photography />} />
 					<Route path="category/computing" element={<Computing />} />

@@ -26,8 +26,6 @@ const RecentAds = () => {
    if (loading) return <p>Loading...</p>;
    if (error) return <p>Error : {error.message}</p>;
 
-   console.log(data.getAllAds);
-   
    return (
       <>
          <h2>Annonces récentes</h2>
