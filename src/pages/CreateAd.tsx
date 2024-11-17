@@ -10,7 +10,7 @@ export type FormValues = {
    price: number,
    picturesUrl: string[],
    location: string,
-   // tags: number[],
+   adTags: number[],
    owner: string,
    createdAt: Date
 }
@@ -32,6 +32,15 @@ const GET_ALL_CATEGORIES = gql`
    }
 `;
 
+const GET_ALL_TAGS = gql`
+   query Query {
+      getAllTags {
+         name
+         id
+      }
+   }
+`;
+
 const CreateAd = () => {
    const navigate = useNavigate();
    const { register, handleSubmit, formState: { errors }  } = useForm<FormValues>({defaultValues: {
@@ -44,11 +53,13 @@ const CreateAd = () => {
       owner: "C'est moi"
    }});
    
-   const { loading, error, data: getAllCategoriesData } = useQuery(GET_ALL_CATEGORIES);
-
+   const { loading: loadingCategories, error: errorCategories, data: getAllCategoriesData } = useQuery(GET_ALL_CATEGORIES);
+   const { loading: loadingTags, error: errorTags, data: getAllTagsData } = useQuery(GET_ALL_TAGS);
+   
    const [createNewAd] = useMutation(CREATE_AD);
-   if (loading) return 'Submitting...';
-   if (error) return `Submission error! ${error.message}`;
+   if (loadingCategories || loadingTags) return 'Submitting...';
+   if (errorCategories) return <p>Error in Categories: {errorCategories.message}</p>;
+   if (errorTags) return <p>Error in Tags: {errorTags.message}</p>;
    
    const onSubmit: SubmitHandler<FormValues> = async (formData) => {
       try {
@@ -63,6 +74,7 @@ const CreateAd = () => {
                   location: formData.location,
                   owner: formData.owner,
                   createdAt: formData.createdAt + "T00:00:00.000Z",
+                  adTags: formData.adTags
                },
             },
          });
@@ -113,14 +125,14 @@ const CreateAd = () => {
             <input className="text-field" type="text" {...register("location", { required: true })} placeholder="Paris" />
          </label>
          
-         {/* <h4>Souhaitez-vous ajouter un ou plusieurs tag(s) ?</h4>
+         <h4>Souhaitez-vous ajouter un ou plusieurs tag(s) ?</h4>
          <div className="checkbox-container">
-            {tags.map(tag => (
-               <label htmlFor={`${tag.id}`}>
-                  <input className="checkbox" type="checkbox" id={`${tag.id}`} value={tag.id} {...register("tags")} />{tag.name}
+            {getAllTagsData.getAllTags.map((tag: any) => (
+               <label key={tag.id} htmlFor={`${tag.id}`}>
+                  <input className="checkbox" type="checkbox" id={`${tag.id}`} value={tag.id} {...register("adTags")} />{tag.name}
                </label>
             ))}
-         </div> */}
+         </div>
 
          <label htmlFor="owner">Vendeur
             <input className="text-field" type="text" {...register("owner", { required: true })} placeholder="Votre nom" />

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-// import Tag, { TagProps } from "./Tag";
+import Tag, { TagProps } from "./Tag";
 
 export type AdCardProps = {
    id: number, 
@@ -14,10 +14,10 @@ export type AdCardProps = {
       id: number,
       name: string
    },
-   // tags: TagProps[]
+   tags: TagProps[]
 }
 
-const AdCard = ({ id, title, picture, category, price }: AdCardProps) => {
+const AdCard = ({ id, title, picture, category, price, tags }: AdCardProps) => {
    const navigate = useNavigate();
    
    const goToAdDetails = () => {
@@ -41,11 +41,11 @@ const AdCard = ({ id, title, picture, category, price }: AdCardProps) => {
             <div className="ad-card-category">
                <p>{category.name}</p>
             </div>
-            {/*<div className="ad-card-tag">
+            <div className="ad-card-tag">
                {tags.map((tag) => (
                   <Tag id={tag.id} name={tag.name} key={tag.id} />
                ))}
-            </div> */}
+            </div>
             <Link to={`ad/edit/${id}`} className="button ad-card-update">Modifier</Link>
             <button className="button ad-card-delete" onClick={handleDelete}>Supprimer</button>
          </div>

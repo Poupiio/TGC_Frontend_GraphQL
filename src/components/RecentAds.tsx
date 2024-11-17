@@ -17,6 +17,9 @@ const GET_ALL_ADS = gql`
          pictures {
             url
          }
+         tags {
+            name
+         }
       }
    }
 `;
@@ -42,6 +45,7 @@ const RecentAds = () => {
                      location={ad.location}
                      price={ad.price}
                      createdAt={ad.createdAt}
+                     tags={ad.tags}
                   />
                </div>
             ))}
