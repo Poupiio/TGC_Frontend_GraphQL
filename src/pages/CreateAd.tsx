@@ -74,7 +74,9 @@ const CreateAd = () => {
                   location: formData.location,
                   owner: formData.owner,
                   createdAt: formData.createdAt + "T00:00:00.000Z",
-                  adTags: formData.adTags
+                  adTags: formData.adTags.map((tagId) => ({
+                     id: tagId
+                  }))
                },
             },
          });
