@@ -1,25 +1,7 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
+import { GET_AD_BY_ID } from "../graphql/queries";
 
-const GET_AD_BY_ID = gql`
-   query GetAdById($getAdByIdId: Float!) {
-      getAdById(id: $getAdByIdId) {
-         id
-         title
-         description
-         owner
-         price
-         pictures {
-            url
-         }
-         location
-         createdAt
-         category {
-            name
-         }
-      }
-   }
-`;
 
 const AdDetails = () => {
    const { id } = useParams();

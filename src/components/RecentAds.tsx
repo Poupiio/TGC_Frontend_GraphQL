@@ -1,28 +1,6 @@
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import AdCard from './AdCard';
-
-const GET_ALL_ADS = gql`
-   query GetAllAds {
-      getAllAds {
-         id
-         title
-         description
-         owner
-         price
-         location
-         createdAt
-         category {
-            name
-         }
-         pictures {
-            url
-         }
-         tags {
-            name
-         }
-      }
-   }
-`;
+import { GET_ALL_ADS } from '../graphql/queries';
 
 const RecentAds = () => {
    const { loading, error, data } = useQuery(GET_ALL_ADS);

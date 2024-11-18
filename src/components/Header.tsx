@@ -1,16 +1,8 @@
 // import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import Category from "./Category";
-
-const GET_ALL_CATEGORIES = gql`
-   query GetAllCategories {
-      getAllCategories {
-         name
-         id
-      }
-   }
-`;
+import { GET_ALL_CATEGORIES } from "../graphql/queries";
 
 const Header = () => {
    const navigate = useNavigate();

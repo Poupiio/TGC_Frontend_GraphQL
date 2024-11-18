@@ -1,7 +1,9 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form"
 import { toast } from "react-toastify";
+import { GET_ALL_CATEGORIES, GET_ALL_TAGS } from '../graphql/queries';
+import { CREATE_AD } from '../graphql/mutations';
 
 export type FormValues = {
    title: string
@@ -14,32 +16,6 @@ export type FormValues = {
    owner: string,
    createdAt: Date
 }
-
-const CREATE_AD = gql`
-   mutation Mutation($data: AdInput!) {
-      createNewAd(data: $data) {
-         id
-      }
-   }
-`;
-
-const GET_ALL_CATEGORIES = gql`
-   query GetAllCategories {
-      getAllCategories {
-         name
-         id
-      }
-   }
-`;
-
-const GET_ALL_TAGS = gql`
-   query Query {
-      getAllTags {
-         name
-         id
-      }
-   }
-`;
 
 const CreateAd = () => {
    const navigate = useNavigate();
