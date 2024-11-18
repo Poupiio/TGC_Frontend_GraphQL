@@ -48,20 +48,15 @@ export const GET_AD_BY_ID = gql`
    }
 `;
 
-export const GET_ALL_CATEGORIES = gql`
-   query GetAllCategories {
+export const GET_ALL_CATEGORIES_AND_TAGS = gql`
+   query GetAllCategoriesAndTags {
       getAllCategories {
-         name
          id
+         name
       }
-   }
-`;
-
-export const GET_ALL_TAGS = gql`
-   query Query {
       getAllTags {
-         name
          id
+         name
       }
-   }
+  }
 `;

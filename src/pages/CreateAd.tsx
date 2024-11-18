@@ -2,8 +2,9 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form"
 import { toast } from "react-toastify";
-import { GET_ALL_CATEGORIES, GET_ALL_TAGS } from '../graphql/queries';
+import { GET_ALL_CATEGORIES_AND_TAGS } from '../graphql/queries';
 import { CREATE_AD } from '../graphql/mutations';
+import { Category, Tag } from '../generated/graphql-types';
 
 export type FormValues = {
    title: string
@@ -12,13 +13,17 @@ export type FormValues = {
    price: number,
    picturesUrl: string[],
    location: string,
-   adTags: number[],
+   adTags: string[],
    owner: string,
    createdAt: Date
 }
 
 const CreateAd = () => {
    const navigate = useNavigate();
+   
+   const { loading, error, data } = useQuery(GET_ALL_CATEGORIES_AND_TAGS);
+   const [createNewAd] = useMutation(CREATE_AD);
+
    const { register, handleSubmit, formState: { errors }  } = useForm<FormValues>({defaultValues: {
       title: "Titre de mon annonce",
       description: "Description de mon annonce",
@@ -29,32 +34,17 @@ const CreateAd = () => {
       owner: "C'est moi"
    }});
    
-   const { loading: loadingCategories, error: errorCategories, data: getAllCategoriesData } = useQuery(GET_ALL_CATEGORIES);
-   const { loading: loadingTags, error: errorTags, data: getAllTagsData } = useQuery(GET_ALL_TAGS);
-   
-   const [createNewAd] = useMutation(CREATE_AD);
-   if (loadingCategories || loadingTags) return 'Submitting...';
-   if (errorCategories) return <p>Error in Categories: {errorCategories.message}</p>;
-   if (errorTags) return <p>Error in Tags: {errorTags.message}</p>;
-   
    const onSubmit: SubmitHandler<FormValues> = async (formData) => {
       try {
+         console.log("tags à envoyer ", formData.adTags);
+         const dataForBackend = {
+            ...formData,
+            createdAt: formData.createdAt + "T00:00:00.000Z",
+            picturesUrl: formData.picturesUrl,
+            adTags: formData.adTags ? formData.adTags : []
+         };
          await createNewAd({
-            variables: {
-               data: {
-                  title: formData.title,
-                  description: formData.description,
-                  category: formData.category,
-                  price: Number(formData.price),
-                  picturesUrl: formData.picturesUrl,
-                  location: formData.location,
-                  owner: formData.owner,
-                  createdAt: formData.createdAt + "T00:00:00.000Z",
-                  adTags: formData.adTags.map((tagId) => ({
-                     id: tagId
-                  }))
-               },
-            },
+            variables: { data: dataForBackend }
          });
 
          toast.success("Annonce créée avec succès !");
@@ -65,6 +55,10 @@ const CreateAd = () => {
       }
    
    }
+
+   
+   if (loading) return 'Submitting...';
+   if (error) return <p>Error in Categories: {error.message}</p>;
 
    return (
       <form
@@ -82,7 +76,7 @@ const CreateAd = () => {
          
          <select className="text-field" {...register("category", { required: true })} id="category">
             <option value="">Choisissez une catégorie</option>
-            {getAllCategoriesData.getAllCategories.map((category: any) => (
+            {data.getAllCategories.map((category: Category) => (
                <option value={category.id} key={category.id}>{category.name}</option>
             ))}
          </select>
@@ -105,7 +99,7 @@ const CreateAd = () => {
          
          <h4>Souhaitez-vous ajouter un ou plusieurs tag(s) ?</h4>
          <div className="checkbox-container">
-            {getAllTagsData.getAllTags.map((tag: any) => (
+            {data.getAllTags.map((tag: Tag) => (
                <label key={tag.id} htmlFor={`${tag.id}`}>
                   <input className="checkbox" type="checkbox" id={`${tag.id}`} value={tag.id} {...register("adTags")} />{tag.name}
                </label>

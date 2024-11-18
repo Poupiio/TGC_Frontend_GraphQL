@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_AD_BY_ID, GET_ALL_CATEGORIES, GET_ALL_TAGS } from "../graphql/queries";
+import { GET_AD_BY_ID, GET_ALL_CATEGORIES_AND_TAGS } from "../graphql/queries";
 import { UPDATE_AD } from "../graphql/mutations";
 
 
@@ -27,8 +27,7 @@ const EditAd = () => {
    if (error) return <p>Error : {error.message}</p>;
    console.log(data.getAdById);
 
-   const { loading: loadingCategories, error: errorCategories, data: getAllCategoriesData } = useQuery(GET_ALL_CATEGORIES);
-   const { loading: loadingTags, error: errorTags, data: getAllTagsData } = useQuery(GET_ALL_TAGS);
+   const { loading: loadingCategoriesAndTags, error: errorCategoriesAndTags, data: getAllCategoriesAndTags } = useQuery(GET_ALL_CATEGORIES_AND_TAGS);
    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({defaultValues: {
       title: data.getAdById.title,
       description: data.getAdById.description,
@@ -39,9 +38,8 @@ const EditAd = () => {
    }});
    
    const [udateAd] = useMutation(UPDATE_AD);
-   if (loadingCategories || loadingTags) return 'Submitting...';
-   if (errorCategories) return <p>Error in Categories: {errorCategories.message}</p>;
-   if (errorTags) return <p>Error in Tags: {errorTags.message}</p>;
+   if (loadingCategoriesAndTags) return 'Submitting...';
+   if (errorCategoriesAndTags) return <p>Error in Categories: {errorCategoriesAndTags.message}</p>;
    
    const onSubmit: SubmitHandler<FormValues> = async (formData) => {
       try {

@@ -2,12 +2,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from '@apollo/client';
 import Category from "./Category";
-import { GET_ALL_CATEGORIES } from "../graphql/queries";
+import { GET_ALL_CATEGORIES_AND_TAGS } from "../graphql/queries";
 
 const Header = () => {
    const navigate = useNavigate();
 
-   const { loading, error, data } = useQuery(GET_ALL_CATEGORIES);
+   const { loading, error, data } = useQuery(GET_ALL_CATEGORIES_AND_TAGS);
    if (loading) return <p>Loading...</p>;
    if (error) return <p>Error : {error.message}</p>;
   
