@@ -17,7 +17,7 @@ const RecentAds = () => {
                         title={ad.title}
                         owner={ad.owner}
                         description={ad.description}
-                        picture={ad.pictures[0]?.url}
+                        pictures={ad.pictures[0]?.url}
                         category={ad.category}
                         location={ad.location}
                         price={ad.price}

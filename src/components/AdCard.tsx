@@ -6,7 +6,7 @@ export type AdCardProps = {
    title: string,
    description: string,
    owner: string,
-   picture: string,
+   pictures: string,
    price: number,
    location: string,
    createdAt: Date,
@@ -17,7 +17,7 @@ export type AdCardProps = {
    tags: TagProps[] | undefined | null;
 }
 
-const AdCard = ({ id, title, picture, category, price, tags }: AdCardProps) => {
+const AdCard = ({ id, title, pictures, category, price, tags }: AdCardProps) => {
    const navigate = useNavigate();
    
    const goToAdDetails = () => {
@@ -31,7 +31,7 @@ const AdCard = ({ id, title, picture, category, price, tags }: AdCardProps) => {
    return (
       <div className="ad-card-container">
          <div className="ad-card-image-container">
-            <img className="ad-card-image" src={picture} />
+            <img className="ad-card-image" src={pictures} />
          </div>
          <div className="ad-card-text" onClick={goToAdDetails}>
             <div className="ad-card-title">{title}</div>

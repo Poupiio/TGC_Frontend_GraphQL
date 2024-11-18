@@ -312,6 +312,13 @@ h1 {
   margin-right: 10px;
 }
 
+.images-container {
+  margin-bottom: 15px;
+}
+.images-container .add-image {
+  margin: 10px 0;
+}
+
 .create-ad {
   width: fit-content;
   margin: 0 auto;

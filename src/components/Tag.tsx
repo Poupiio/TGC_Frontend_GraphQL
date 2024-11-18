@@ -1,9 +1,9 @@
 export type TagProps = { id: number, name: string };
 
-const Tag = ({ name }: TagProps) => {
+const Tag = ({ id, name }: TagProps) => {
    return (
       <>
-         <p className="tag">{name}</p>
+         <p className="tag" key={id}>{name}</p>
       </>
    );
 };

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_AD_BY_ID, GET_ALL_CATEGORIES_AND_TAGS } from "../graphql/queries";
 import { UPDATE_AD } from "../graphql/mutations";
+import { Category, Tag } from "../generated/graphql-types";
 
 
 type FormValues = {
@@ -11,9 +12,9 @@ type FormValues = {
    description: string,
    category: number,
    price: number,
-   picturesUrl: string[],
+   pictures: string[],
    location: string,
-   adTags: number[],
+   tags: number[],
 }
 
 const EditAd = () => {
@@ -23,26 +24,26 @@ const EditAd = () => {
    const { loading, error, data } = useQuery(GET_AD_BY_ID, {
       variables: { getAdByIdId: parseFloat(id!) }
    });
-   if (loading) return <p>Loading...</p>;
-   if (error) return <p>Error : {error.message}</p>;
-   console.log(data.getAdById);
-
    const { loading: loadingCategoriesAndTags, error: errorCategoriesAndTags, data: getAllCategoriesAndTags } = useQuery(GET_ALL_CATEGORIES_AND_TAGS);
+   const [udateAd] = useMutation(UPDATE_AD);
+
+   
    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({defaultValues: {
       title: data.getAdById.title,
       description: data.getAdById.description,
       category: data.getAdById.category.name,
       price: data.getAdById.price,
-      picturesUrl: data.getAdById.picturesUrl[0]?.url,
+      pictures: data.getAdById.pictures[0]?.url,
       location: data.getAdById.location,
    }});
-   
-   const [udateAd] = useMutation(UPDATE_AD);
-   if (loadingCategoriesAndTags) return 'Submitting...';
-   if (errorCategoriesAndTags) return <p>Error in Categories: {errorCategoriesAndTags.message}</p>;
+
+   if (loading || loadingCategoriesAndTags) return <p>Loading...</p>;
+   if (error || errorCategoriesAndTags) return <p>Error: {error?.message || errorCategoriesAndTags?.message}</p>;
    
    const onSubmit: SubmitHandler<FormValues> = async (formData) => {
+      
       try {
+         console.log(formData);
          await udateAd({
             variables: {
                data: {
@@ -50,9 +51,9 @@ const EditAd = () => {
                   description: formData.description,
                   category: formData.category,
                   price: Number(formData.price),
-                  picturesUrl: formData.picturesUrl,
+                  pictures: formData.pictures,
                   location: formData.location,
-                  adTags: formData.adTags.map((tagId) => ({
+                  tags: formData.tags.map((tagId) => ({
                      id: tagId
                   }))
                },
@@ -80,7 +81,7 @@ const EditAd = () => {
             
             <select className="text-field" {...register("category", { required: true })} id="category">
             <option value="">Choisissez une catégorie</option>
-            {data.getAllCategories.map((category: any) => (
+            {getAllCategoriesAndTags.getAllCategories.map((category: Category) => (
                <option value={category.id} key={category.id}>{category.name}</option>
             ))}
          </select>
@@ -90,7 +91,7 @@ const EditAd = () => {
             </label>
             
             <label htmlFor="picture">Entrez l'URL de votre image
-               <input className="text-field" type="text" {...register("picturesUrl", { required: true })} maxLength={2000} defaultValue={data.getAdById.picture} />
+               <input className="text-field" type="text" {...register("pictures", { required: true })} maxLength={2000} defaultValue={data.getAdById.picture} />
             </label>
 
             <label htmlFor="location">Localisation
@@ -98,9 +99,9 @@ const EditAd = () => {
             </label>
 
             <div className="checkbox-container">
-               {data.getAllTags.map((tag: any) => (
+               {getAllCategoriesAndTags.getAllTags.map((tag: Tag) => (
                   <label key={tag.id} htmlFor={`${tag.id}`}>
-                     <input className="checkbox" type="checkbox" id={`${tag.id}`} value={tag.id} {...register("adTags")} />{tag.name}
+                     <input className="checkbox" type="checkbox" id={`${tag.id}`} value={tag.id} {...register("tags")} />{tag.name}
                   </label>
                ))}
             </div>

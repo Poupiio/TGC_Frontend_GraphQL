@@ -33,14 +33,13 @@ export type Ad = {
 };
 
 export type AdInput = {
-  adTags?: InputMaybe<Array<Scalars['String']['input']>>;
   category: Scalars['ID']['input'];
-  createdAt: Scalars['DateTimeISO']['input'];
   description: Scalars['String']['input'];
   location: Scalars['String']['input'];
   owner: Scalars['String']['input'];
-  picturesUrl?: InputMaybe<Array<Scalars['String']['input']>>;
+  pictures?: InputMaybe<Array<PictureInput>>;
   price: Scalars['Float']['input'];
+  tags?: InputMaybe<Array<TagInput>>;
   title: Scalars['String']['input'];
 };
 
@@ -57,15 +56,11 @@ export type CategoryInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   createNewAd: Ad;
-  createNewCategory: Tag;
-  createNewPicture: Picture;
+  createNewCategory: Category;
   removeAd: Scalars['String']['output'];
   removeCategory: Scalars['String']['output'];
-  removePicture: Scalars['String']['output'];
   updateAd: Ad;
   updateCategory: Category;
-  updatePicture: Picture;
-  updateTag: Tag;
 };
 
 
@@ -75,12 +70,7 @@ export type MutationCreateNewAdArgs = {
 
 
 export type MutationCreateNewCategoryArgs = {
-  data: TagInput;
-};
-
-
-export type MutationCreateNewPictureArgs = {
-  data: PictureInput;
+  data: CategoryInput;
 };
 
 
@@ -94,11 +84,6 @@ export type MutationRemoveCategoryArgs = {
 };
 
 
-export type MutationRemovePictureArgs = {
-  id: Scalars['Float']['input'];
-};
-
-
 export type MutationUpdateAdArgs = {
   data: UpdateAdInput;
 };
@@ -106,18 +91,6 @@ export type MutationUpdateAdArgs = {
 
 export type MutationUpdateCategoryArgs = {
   data: CategoryInput;
-  id: Scalars['Float']['input'];
-};
-
-
-export type MutationUpdatePictureArgs = {
-  data: PictureInput;
-  id: Scalars['Float']['input'];
-};
-
-
-export type MutationUpdateTagArgs = {
-  data: TagInput;
   id: Scalars['Float']['input'];
 };
 
@@ -170,7 +143,7 @@ export type Tag = {
 };
 
 export type TagInput = {
-  name: Scalars['String']['input'];
+  id: Scalars['Float']['input'];
 };
 
 export type UpdateAdInput = {

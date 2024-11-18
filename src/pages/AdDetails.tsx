@@ -22,7 +22,7 @@ const AdDetails = () => {
       <>
          <section className="ad-details">
             <div className="ad-details-image-container">
-               <img className="ad-details-image" src={data.getAdById.pictures[0]?.url} />
+               <img className="ad-details-image" src={data.getAdById.pictures[0]?.url} key={data.getAdById.pictures[0]?.id} />
             </div>
             <h2 className="ad-details-title">{data.getAdById.title}</h2>
             <div className="ad-card-category">
@@ -54,7 +54,7 @@ const AdDetails = () => {
                </a>
             </div>
             <div className="ad-call-to-actions">
-               <Link to={`ad/edit/${id}`} className="button ad-card-update">Modifier</Link>
+               <Link to={`/ad/edit/${id}`} className="button ad-card-update">Modifier</Link>
                <button className="button ad-card-delete" onClick={handleDelete}>Supprimer</button>
             </div>
          </section>
