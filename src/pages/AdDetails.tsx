@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { GET_AD_BY_ID } from "../graphql/queries";
+import Tag from "../components/Tag";
 
 
 const AdDetails = () => {
@@ -13,6 +14,10 @@ const AdDetails = () => {
    if (loading) return <p>Loading...</p>;
    if (error) return <p>Error : {error.message}</p>;
 
+   const handleDelete = async () => {
+      console.log(`Annonce à supprimer ${id}`);
+   };
+
    return (
       <>
          <section className="ad-details">
@@ -20,10 +25,18 @@ const AdDetails = () => {
                <img className="ad-details-image" src={data.getAdById.pictures[0]?.url} />
             </div>
             <h2 className="ad-details-title">{data.getAdById.title}</h2>
+            <div className="ad-card-category">
+               <p>{data.getAdById.category.name}</p>
+            </div>
+            <div className="ad-card-tag">
+               {data.getAdById.tags.map((tag: any) => (
+                  <Tag id={tag.id} name={tag.name} key={tag.id} />
+               ))}
+            </div>
             <div className="ad-details-info">
                <div className="ad-details-price">{data.getAdById.price} €</div>
                <div className="ad-details-description">
-                  <h5>Description</h5>
+                  <h3>Description</h3>
                   <p>{data.getAdById.description}</p>
                </div>
                <div className="ad-details-location">
@@ -39,6 +52,10 @@ const AdDetails = () => {
                <a href={`mailto:${data.getAdById.owner}`} className="button button-primary link-button mailBtn">
                   <i className="fa-regular fa-envelope"></i>Envoyer un email
                </a>
+            </div>
+            <div className="ad-call-to-actions">
+               <Link to={`ad/edit/${id}`} className="button ad-card-update">Modifier</Link>
+               <button className="button ad-card-delete" onClick={handleDelete}>Supprimer</button>
             </div>
          </section>
       </>

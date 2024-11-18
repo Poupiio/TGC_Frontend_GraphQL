@@ -14,7 +14,7 @@ export type AdCardProps = {
       id: number,
       name: string
    },
-   tags: TagProps[]
+   tags: TagProps[] | undefined | null;
 }
 
 const AdCard = ({ id, title, picture, category, price, tags }: AdCardProps) => {
@@ -25,15 +25,15 @@ const AdCard = ({ id, title, picture, category, price, tags }: AdCardProps) => {
    };
 
    const handleDelete = async () => {
-      console.log("Supprimé");
+      console.log(`Annonce à supprimer ${id}`);
    };
 
    return (
-      <div className="ad-card-container" onClick={goToAdDetails}>
+      <div className="ad-card-container">
          <div className="ad-card-image-container">
             <img className="ad-card-image" src={picture} />
          </div>
-         <div className="ad-card-text">
+         <div className="ad-card-text" onClick={goToAdDetails}>
             <div className="ad-card-title">{title}</div>
             <div className="ad-card-price">{price} €</div>
          </div>
@@ -42,7 +42,7 @@ const AdCard = ({ id, title, picture, category, price, tags }: AdCardProps) => {
                <p>{category.name}</p>
             </div>
             <div className="ad-card-tag">
-               {tags.map((tag) => (
+               {tags?.map((tag) => (
                   <Tag id={tag.id} name={tag.name} key={tag.id} />
                ))}
             </div>

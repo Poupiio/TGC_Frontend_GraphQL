@@ -112,7 +112,7 @@ h1 {
 }
  
 .main-content {
-  max-width: 832px;
+  max-width: 1100px;
   padding: 0 16px;
   margin: 25vh auto 48px;
 }
@@ -128,7 +128,6 @@ h1 {
   border: 1px solid lightgray;
   color: inherit;
   background-color: white;
-  cursor: pointer;
 }
  
 .ad-card-link {
@@ -157,6 +156,7 @@ h1 {
  
 .ad-card-title {
   font-weight: bold;
+  cursor: pointer;
 }
 
 .ad-card-title .link-title {
@@ -180,14 +180,18 @@ h1 {
 }
 
 .ad-card-category {
-  background: #FFA41B;
-  width: fit-content;
   border-radius: 8px;
+  width: fit-content;
 }
 
 .ad-card-category p {
-  padding: 5px 10px;
-  font-weight: 500;
+  padding: 8px 10px;
+  font-weight: 600;
+  background: #FFA41B;
+  text-transform: uppercase;
+  color: #fff;
+  letter-spacing: 1px;
+  display: inline-block;
 }
 
 .tag {
@@ -342,6 +346,7 @@ h1 {
   display: grid;
   gap: 12px;
   align-content: baseline;
+  margin: 20px 0;
 }
  
 .ad-details-price {

@@ -11,12 +11,14 @@ export const GET_ALL_ADS = gql`
          location
          createdAt
          category {
+            id
             name
          }
          pictures {
             url
          }
          tags {
+            id
             name
          }
       }

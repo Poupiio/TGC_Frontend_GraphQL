@@ -1,116 +1,116 @@
-// import { useNavigate, useParams } from "react-router-dom";
-// import { AdCardProps } from "../components/AdCard";
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-// import { CategoryProps } from "../components/Category";
-// import { FormValues } from "./CreateAd";
-// import { SubmitHandler, useForm } from "react-hook-form";
-// import { toast } from "react-toastify";
-// import { TagProps } from "../components/Tag";
+import { useNavigate, useParams } from "react-router-dom";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_AD_BY_ID, GET_ALL_CATEGORIES, GET_ALL_TAGS } from "../graphql/queries";
+import { UPDATE_AD } from "../graphql/mutations";
 
-// const EditAd = () => {
-//    const { id } = useParams();
-//    const navigate = useNavigate();
-//    const [ad, setAd] = useState({} as AdCardProps);
-//    const [categories, setCategories] = useState<CategoryProps[]>([]);
-//    const [tags, setTags] = useState<TagProps[]>([]);
-//    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>();
-//    const [preselectedTags, setPreselectedTags] = useState<TagProps[]>();
-//    // const preSelectTags = ad.tags ? ad.tags.map(tag => tag.id) : [];
-//    // console.log(preSelectTags);
 
-//    const onSubmit: SubmitHandler<FormValues> = async (data) => {
-//       try {
-//          await axios.put(`http://localhost:3000/ads/${id}`, data);
-//          toast.success("Ad has been updated");
+type FormValues = {
+   title: string
+   description: string,
+   category: number,
+   price: number,
+   picturesUrl: string[],
+   location: string,
+   adTags: number[],
+}
+
+const EditAd = () => {
+   const { id } = useParams();
+   const navigate = useNavigate();
+   
+   const { loading, error, data } = useQuery(GET_AD_BY_ID, {
+      variables: { getAdByIdId: parseFloat(id!) }
+   });
+   if (loading) return <p>Loading...</p>;
+   if (error) return <p>Error : {error.message}</p>;
+   console.log(data.getAdById);
+
+   const { loading: loadingCategories, error: errorCategories, data: getAllCategoriesData } = useQuery(GET_ALL_CATEGORIES);
+   const { loading: loadingTags, error: errorTags, data: getAllTagsData } = useQuery(GET_ALL_TAGS);
+   const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({defaultValues: {
+      title: data.getAdById.title,
+      description: data.getAdById.description,
+      category: data.getAdById.category.name,
+      price: data.getAdById.price,
+      picturesUrl: data.getAdById.picturesUrl[0]?.url,
+      location: data.getAdById.location,
+   }});
+   
+   const [udateAd] = useMutation(UPDATE_AD);
+   if (loadingCategories || loadingTags) return 'Submitting...';
+   if (errorCategories) return <p>Error in Categories: {errorCategories.message}</p>;
+   if (errorTags) return <p>Error in Tags: {errorTags.message}</p>;
+   
+   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
+      try {
+         await udateAd({
+            variables: {
+               data: {
+                  title: formData.title,
+                  description: formData.description,
+                  category: formData.category,
+                  price: Number(formData.price),
+                  picturesUrl: formData.picturesUrl,
+                  location: formData.location,
+                  adTags: formData.adTags.map((tagId) => ({
+                     id: tagId
+                  }))
+               },
+            },
+         });
+         toast.success("Ad has been updated");
          
-//          navigate("/");
-//       } catch (error) {
-//          console.error("Erreur lors de la création de l'annonce :", error, errors);
-//       }
-//    }
+         navigate("/");
+      } catch (error) {
+         console.error("Erreur lors de la création de l'annonce :", error, errors);
+      }
+   }
 
-//    useEffect(() => {
-//       const fetchCategories = async () => {
-//          const result = await axios.get("http://localhost:3000/categories");
-//          setCategories(result.data);
-//       }
-
-//       const fetchTags = async () => {
-//          const result = await axios.get("http://localhost:3000/tags");
-//          setTags(result.data);
-//       }
-//       const fetchData = async () => {
-//          try {
-//             const result = await axios.get(`http://localhost:3000/ads/${id}`);
-//             setAd(result.data);
-//             console.log(result.data.tags);
+   return (
+      <>
+         <h1>Modifier {data.getAdById.title}</h1>
+         <form className="form" method="post" onSubmit={handleSubmit(onSubmit)}>
+            <label htmlFor="title">Titre de l'annonce
+               <input className="text-field" type="text" {...register("title", { required: true })} placeholder="Titre de l'annonce" defaultValue={data.getAdById.title} />
+            </label>
             
+            <label htmlFor="description">Description
+               <textarea className="text-field" {...register("description")} id="description" placeholder="Description..." defaultValue={data.getAdById.description}></textarea>
+            </label>
             
-//          } catch (err) {
-//             console.log("error", err);
-//          }
-//       }
-//       fetchCategories();
-//       fetchTags();
-//       fetchData();
-//    }, [id]);
-
-//    if (!ad || !ad.category) {
-//       return <p>Loading...</p>;
-//    }
-
-//    return (
-//       <>
-//          <h1>Modifier {ad.title}</h1>
-//          <form className="form" method="post" onSubmit={handleSubmit(onSubmit)}>
-//             <label htmlFor="title">Titre de l'annonce
-//                <input className="text-field" type="text" {...register("title", { required: true })} placeholder="Titre de l'annonce" defaultValue={ad.title} />
-//             </label>
+            <select className="text-field" {...register("category", { required: true })} id="category">
+            <option value="">Choisissez une catégorie</option>
+            {data.getAllCategories.map((category: any) => (
+               <option value={category.id} key={category.id}>{category.name}</option>
+            ))}
+         </select>
             
-//             <label htmlFor="description">Description
-//                <textarea className="text-field" {...register("description")} id="description" placeholder="Description..." defaultValue={ad.description}></textarea>
-//             </label>
+            <label htmlFor="price">Prix
+               <input className="text-field" type="number" {...register("price", { required: true })} min="0" defaultValue={data.getAdById.price} />
+            </label>
             
-//             <select className="text-field" {...register("category", { required: true })} id="category" defaultValue={ad.category.id}>
-//                {categories.map(category => (
-//                   <option value={category.id} key={category.id}>{category.name}</option>
-//                ))}
-//             </select>
-            
-//             <label htmlFor="price">Prix
-//                <input className="text-field" type="number" {...register("price", { required: true })} min="0" defaultValue={ad.price} />
-//             </label>
-            
-//             {/* Provisoire pour le test ! */}
-//             <label htmlFor="picture">Entrez l'URL de votre image
-//                <input className="text-field" type="text" {...register("picture", { required: true })} maxLength={2000} defaultValue={ad.picture} />
-//             </label>
+            <label htmlFor="picture">Entrez l'URL de votre image
+               <input className="text-field" type="text" {...register("picturesUrl", { required: true })} maxLength={2000} defaultValue={data.getAdById.picture} />
+            </label>
 
-//             <label htmlFor="location">Localisation
-//                <input className="text-field" type="text" {...register("location", { required: true })} placeholder="Paris" defaultValue={ad.location} />
-//             </label>
+            <label htmlFor="location">Localisation
+               <input className="text-field" type="text" {...register("location", { required: true })} placeholder="Paris" defaultValue={data.getAdById.location} />
+            </label>
 
-//             <div className="checkbox-container">
-//                {tags.map(tag => (
-//                   <label htmlFor={`${tag.id}`} key={tag.id}>
-//                      <input className="checkbox" type="checkbox" id={`${tag.id}`} value={tag.id} {...register("tags")} defaultChecked={ad.tags?.some(adTag => adTag.id == tag.id)} />{tag.name}
-//                   </label>
-//                ))}
-//             </div>
-            
-//             <label htmlFor="owner">Vendeur
-//                <input className="text-field" type="text" {...register("owner", { required: true })} placeholder="Votre nom" defaultValue={ad.owner} />
-//             </label>
+            <div className="checkbox-container">
+               {data.getAllTags.map((tag: any) => (
+                  <label key={tag.id} htmlFor={`${tag.id}`}>
+                     <input className="checkbox" type="checkbox" id={`${tag.id}`} value={tag.id} {...register("adTags")} />{tag.name}
+                  </label>
+               ))}
+            </div>
 
-//             <label htmlFor="createdAt">Date d'ajout
-//                <input className="text-field" type="date" {...register("createdAt")} defaultValue={ad.createdAt ? new Date(ad.createdAt).toISOString().split("T")[0] : ""}/>
-//             </label>
+            <button className="button" type="submit">Modifier</button>
+         </form>
+      </>
+   );
+};
 
-//             <button className="button" type="submit">Modifier</button>
-//          </form>
-//       </>
-//    );
-// };
-
-// export default EditAd;
+export default EditAd;

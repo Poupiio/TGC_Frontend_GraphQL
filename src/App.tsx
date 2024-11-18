@@ -18,7 +18,7 @@ import AdDetails from "./pages/AdDetails";
 // import Counter from "./pages/Counter";
 // import CreateAd from "./pages/CreateAd";
 // import CreateCategory from "./pages/CreateCategory";
-// import EditAd from "./pages/EditAd";
+import EditAd from "./pages/EditAd";
 // import SearchAdPage from "./pages/SearchAdPage";
 // import AdsByCategory from "./pages/AdsByCategory";
 import { ToastContainer } from 'react-toastify';
@@ -36,9 +36,9 @@ function App() {
 					<Route path="ad/:id" element={<AdDetails />} />
 					{/* <Route path="ad/search/:keyword" element={<SearchAdPage />} /> */}
 					<Route path="ad/new" element={<CreateAd />} />
-					{/*<Route path="ad/edit/:id" element={<EditAd />} />
-					<Route path="category/new" element={<CreateCategory />} />
-					 <Route path="category/furnishings" element={<Furnishings />} />
+					<Route path="ad/edit/:id" element={<EditAd />} />
+					{/*<Route path="category/new" element={<CreateCategory />} />
+					<Route path="category/furnishings" element={<Furnishings />} />
 					<Route path="category/electrical-appliances" element={<ElectricalAppliances />} />
 					<Route path="category/photography" element={<Photography />} />
 					<Route path="category/computing" element={<Computing />} />
