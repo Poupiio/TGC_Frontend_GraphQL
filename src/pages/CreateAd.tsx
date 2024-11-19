@@ -45,7 +45,6 @@ const CreateAd = () => {
    
    const onSubmit: SubmitHandler<FormValues> = async (formData) => {
       try {
-         console.log("data from react hook form", formData);
          const dataForBackend = {
             ...formData,
             price: parseInt(formData.price),
@@ -61,7 +60,6 @@ const CreateAd = () => {
          console.error("Erreur lors de la création de l'annonce :", errors, err);
          toast.error("Une erreur est survenue !");
       }
-   
    }
 
    if (loading) return 'Submitting...';

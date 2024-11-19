@@ -21,7 +21,9 @@ const AdDetails = () => {
 
    const handleDelete = async () => {
       await deleteAdById({
+         // Recharger les ads au retour sur la page RecentAds
          refetchQueries: [GET_ALL_ADS],
+         // Option du refetch pour éviter le petit temps de latence entre la suppression et le rechargement
          awaitRefetchQueries: true,
       });
       navigate("/");
