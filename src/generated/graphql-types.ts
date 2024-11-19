@@ -26,7 +26,7 @@ export type Ad = {
   id: Scalars['Float']['output'];
   location: Scalars['String']['output'];
   owner: Scalars['String']['output'];
-  pictures: Array<Picture>;
+  pictures?: Maybe<Array<Picture>>;
   price: Scalars['Float']['output'];
   tags?: Maybe<Array<Tag>>;
   title: Scalars['String']['output'];
@@ -170,7 +170,7 @@ export type UpdateAdMutationVariables = Exact<{
 }>;
 
 
-export type UpdateAdMutation = { __typename?: 'Mutation', updateAd: { __typename?: 'Ad', id: number, title: string, description: string, owner: string, price: number, location: string, createdAt: any, category: { __typename?: 'Category', name: string }, pictures: Array<{ __typename?: 'Picture', url: string }>, tags?: Array<{ __typename?: 'Tag', name: string }> | null } };
+export type UpdateAdMutation = { __typename?: 'Mutation', updateAd: { __typename?: 'Ad', id: number, title: string, description: string, owner: string, price: number, location: string, createdAt: any, category: { __typename?: 'Category', name: string }, pictures?: Array<{ __typename?: 'Picture', url: string }> | null, tags?: Array<{ __typename?: 'Tag', name: string }> | null } };
 
 export type RemoveAdMutationVariables = Exact<{
   removeAdId: Scalars['Float']['input'];
@@ -182,19 +182,26 @@ export type RemoveAdMutation = { __typename?: 'Mutation', removeAd: string };
 export type GetAllAdsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllAdsQuery = { __typename?: 'Query', getAllAds: Array<{ __typename?: 'Ad', id: number, title: string, description: string, owner: string, price: number, location: string, createdAt: any, category: { __typename?: 'Category', id: number, name: string }, pictures: Array<{ __typename?: 'Picture', url: string }>, tags?: Array<{ __typename?: 'Tag', id: number, name: string }> | null }> };
+export type GetAllAdsQuery = { __typename?: 'Query', getAllAds: Array<{ __typename?: 'Ad', id: number, title: string, description: string, owner: string, price: number, location: string, createdAt: any, category: { __typename?: 'Category', id: number, name: string }, pictures?: Array<{ __typename?: 'Picture', id: number, url: string }> | null, tags?: Array<{ __typename?: 'Tag', id: number, name: string }> | null }> };
 
 export type GetAdByIdQueryVariables = Exact<{
   getAdByIdId: Scalars['Float']['input'];
 }>;
 
 
-export type GetAdByIdQuery = { __typename?: 'Query', getAdById: { __typename?: 'Ad', id: number, title: string, description: string, owner: string, price: number, location: string, createdAt: any, pictures: Array<{ __typename?: 'Picture', url: string }>, category: { __typename?: 'Category', name: string }, tags?: Array<{ __typename?: 'Tag', name: string }> | null } };
+export type GetAdByIdQuery = { __typename?: 'Query', getAdById: { __typename?: 'Ad', id: number, title: string, description: string, owner: string, price: number, location: string, createdAt: any, pictures?: Array<{ __typename?: 'Picture', url: string }> | null, category: { __typename?: 'Category', name: string }, tags?: Array<{ __typename?: 'Tag', name: string }> | null } };
 
 export type GetAllCategoriesAndTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllCategoriesAndTagsQuery = { __typename?: 'Query', getAllCategories: Array<{ __typename?: 'Category', id: number, name: string }>, getAllTags: Array<{ __typename?: 'Tag', id: number, name: string }> };
+
+export type GetAdByIdAndAllCategoriesAndTagsQueryVariables = Exact<{
+  getAdByIdId: Scalars['Float']['input'];
+}>;
+
+
+export type GetAdByIdAndAllCategoriesAndTagsQuery = { __typename?: 'Query', getAdById: { __typename?: 'Ad', id: number, title: string, description: string, price: number, location: string, pictures?: Array<{ __typename?: 'Picture', url: string }> | null, category: { __typename?: 'Category', name: string }, tags?: Array<{ __typename?: 'Tag', name: string }> | null }, getAllCategories: Array<{ __typename?: 'Category', id: number, name: string }>, getAllTags: Array<{ __typename?: 'Tag', id: number, name: string }> };
 
 
 export const CreateNewAdDocument = gql`
@@ -324,6 +331,7 @@ export const GetAllAdsDocument = gql`
       name
     }
     pictures {
+      id
       url
     }
     tags {
@@ -464,3 +472,64 @@ export type GetAllCategoriesAndTagsQueryHookResult = ReturnType<typeof useGetAll
 export type GetAllCategoriesAndTagsLazyQueryHookResult = ReturnType<typeof useGetAllCategoriesAndTagsLazyQuery>;
 export type GetAllCategoriesAndTagsSuspenseQueryHookResult = ReturnType<typeof useGetAllCategoriesAndTagsSuspenseQuery>;
 export type GetAllCategoriesAndTagsQueryResult = Apollo.QueryResult<GetAllCategoriesAndTagsQuery, GetAllCategoriesAndTagsQueryVariables>;
+export const GetAdByIdAndAllCategoriesAndTagsDocument = gql`
+    query GetAdByIdAndAllCategoriesAndTags($getAdByIdId: Float!) {
+  getAdById(id: $getAdByIdId) {
+    id
+    title
+    description
+    price
+    pictures {
+      url
+    }
+    location
+    category {
+      name
+    }
+    tags {
+      name
+    }
+  }
+  getAllCategories {
+    id
+    name
+  }
+  getAllTags {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetAdByIdAndAllCategoriesAndTagsQuery__
+ *
+ * To run a query within a React component, call `useGetAdByIdAndAllCategoriesAndTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAdByIdAndAllCategoriesAndTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAdByIdAndAllCategoriesAndTagsQuery({
+ *   variables: {
+ *      getAdByIdId: // value for 'getAdByIdId'
+ *   },
+ * });
+ */
+export function useGetAdByIdAndAllCategoriesAndTagsQuery(baseOptions: Apollo.QueryHookOptions<GetAdByIdAndAllCategoriesAndTagsQuery, GetAdByIdAndAllCategoriesAndTagsQueryVariables> & ({ variables: GetAdByIdAndAllCategoriesAndTagsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAdByIdAndAllCategoriesAndTagsQuery, GetAdByIdAndAllCategoriesAndTagsQueryVariables>(GetAdByIdAndAllCategoriesAndTagsDocument, options);
+      }
+export function useGetAdByIdAndAllCategoriesAndTagsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAdByIdAndAllCategoriesAndTagsQuery, GetAdByIdAndAllCategoriesAndTagsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAdByIdAndAllCategoriesAndTagsQuery, GetAdByIdAndAllCategoriesAndTagsQueryVariables>(GetAdByIdAndAllCategoriesAndTagsDocument, options);
+        }
+export function useGetAdByIdAndAllCategoriesAndTagsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAdByIdAndAllCategoriesAndTagsQuery, GetAdByIdAndAllCategoriesAndTagsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAdByIdAndAllCategoriesAndTagsQuery, GetAdByIdAndAllCategoriesAndTagsQueryVariables>(GetAdByIdAndAllCategoriesAndTagsDocument, options);
+        }
+export type GetAdByIdAndAllCategoriesAndTagsQueryHookResult = ReturnType<typeof useGetAdByIdAndAllCategoriesAndTagsQuery>;
+export type GetAdByIdAndAllCategoriesAndTagsLazyQueryHookResult = ReturnType<typeof useGetAdByIdAndAllCategoriesAndTagsLazyQuery>;
+export type GetAdByIdAndAllCategoriesAndTagsSuspenseQueryHookResult = ReturnType<typeof useGetAdByIdAndAllCategoriesAndTagsSuspenseQuery>;
+export type GetAdByIdAndAllCategoriesAndTagsQueryResult = Apollo.QueryResult<GetAdByIdAndAllCategoriesAndTagsQuery, GetAdByIdAndAllCategoriesAndTagsQueryVariables>;

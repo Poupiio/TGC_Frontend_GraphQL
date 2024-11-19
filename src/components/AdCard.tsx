@@ -1,27 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import Tag, { TagProps } from "./Tag";
-import { useRemoveAdMutation } from "../generated/graphql-types";
+import Tag from "./Tag";
+import { Ad, useRemoveAdMutation } from "../generated/graphql-types";
 import { GET_ALL_ADS } from "../graphql/queries";
 
-export type AdCardProps = {
-   id: number, 
-   title: string,
-   description: string,
-   owner: string,
-   pictures: string,
-   price: number,
-   location: string,
-   createdAt: Date,
-   category: {
-      id: number,
-      name: string
-   },
-   tags: TagProps[] | undefined | null;
-}
 
-const AdCard = ({ id, title, pictures, category, price, tags }: AdCardProps) => {
+const AdCard = ({ id, title, pictures, category, price, tags }: Ad) => {
    const navigate = useNavigate();
-   
+
    const goToAdDetails = () => {
       navigate(`/ad/${id}`);
    };
@@ -41,7 +26,7 @@ const AdCard = ({ id, title, pictures, category, price, tags }: AdCardProps) => 
    return (
       <div className="ad-card-container">
          <div className="ad-card-image-container">
-            <img className="ad-card-image" src={pictures} />
+            <img className="ad-card-image" src={pictures?.[0]?.url} />
          </div>
          <div className="ad-card-text" onClick={goToAdDetails}>
             <div className="ad-card-title">{title}</div>

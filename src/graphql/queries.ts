@@ -15,6 +15,7 @@ export const GET_ALL_ADS = gql`
             name
          }
          pictures {
+            id
             url
          }
          tags {
@@ -50,6 +51,35 @@ export const GET_AD_BY_ID = gql`
 
 export const GET_ALL_CATEGORIES_AND_TAGS = gql`
    query GetAllCategoriesAndTags {
+      getAllCategories {
+         id
+         name
+      }
+      getAllTags {
+         id
+         name
+      }
+  }
+`;
+
+export const GET_AD_BY_ID_AND_CATEGORIES_AND_TAGS = gql`
+   query GetAdByIdAndAllCategoriesAndTags($getAdByIdId: Float!) {
+      getAdById(id: $getAdByIdId) {
+         id
+         title
+         description
+         price
+         pictures {
+            url
+         }
+         location
+         category {
+            name
+         }
+         tags {
+            name
+         }
+      }
       getAllCategories {
          id
          name
