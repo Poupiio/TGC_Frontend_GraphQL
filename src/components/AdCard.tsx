@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import Tag, { TagProps } from "./Tag";
+import { useRemoveAdMutation } from "../generated/graphql-types";
+import { GET_ALL_ADS } from "../graphql/queries";
 
 export type AdCardProps = {
    id: number, 
@@ -23,9 +25,17 @@ const AdCard = ({ id, title, pictures, category, price, tags }: AdCardProps) => 
    const goToAdDetails = () => {
       navigate(`/ad/${id}`);
    };
+   
+   const [deleteAdById] = useRemoveAdMutation({
+      variables: { removeAdId: id }
+   });
 
    const handleDelete = async () => {
-      console.log(`Annonce à supprimer ${id}`);
+      await deleteAdById({
+         refetchQueries: [GET_ALL_ADS],
+         awaitRefetchQueries: true,
+      });
+      navigate("/");
    };
 
    return (

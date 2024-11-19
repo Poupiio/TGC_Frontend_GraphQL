@@ -158,12 +158,12 @@ export type UpdateAdInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type MutationMutationVariables = Exact<{
+export type CreateNewAdMutationVariables = Exact<{
   data: AdInput;
 }>;
 
 
-export type MutationMutation = { __typename?: 'Mutation', createNewAd: { __typename?: 'Ad', id: number } };
+export type CreateNewAdMutation = { __typename?: 'Mutation', createNewAd: { __typename?: 'Ad', id: number } };
 
 export type UpdateAdMutationVariables = Exact<{
   data: UpdateAdInput;
@@ -171,6 +171,13 @@ export type UpdateAdMutationVariables = Exact<{
 
 
 export type UpdateAdMutation = { __typename?: 'Mutation', updateAd: { __typename?: 'Ad', id: number, title: string, description: string, owner: string, price: number, location: string, createdAt: any, category: { __typename?: 'Category', name: string }, pictures: Array<{ __typename?: 'Picture', url: string }>, tags?: Array<{ __typename?: 'Tag', name: string }> | null } };
+
+export type RemoveAdMutationVariables = Exact<{
+  removeAdId: Scalars['Float']['input'];
+}>;
+
+
+export type RemoveAdMutation = { __typename?: 'Mutation', removeAd: string };
 
 export type GetAllAdsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -190,39 +197,39 @@ export type GetAllCategoriesAndTagsQueryVariables = Exact<{ [key: string]: never
 export type GetAllCategoriesAndTagsQuery = { __typename?: 'Query', getAllCategories: Array<{ __typename?: 'Category', id: number, name: string }>, getAllTags: Array<{ __typename?: 'Tag', id: number, name: string }> };
 
 
-export const MutationDocument = gql`
-    mutation Mutation($data: AdInput!) {
+export const CreateNewAdDocument = gql`
+    mutation CreateNewAd($data: AdInput!) {
   createNewAd(data: $data) {
     id
   }
 }
     `;
-export type MutationMutationFn = Apollo.MutationFunction<MutationMutation, MutationMutationVariables>;
+export type CreateNewAdMutationFn = Apollo.MutationFunction<CreateNewAdMutation, CreateNewAdMutationVariables>;
 
 /**
- * __useMutationMutation__
+ * __useCreateNewAdMutation__
  *
- * To run a mutation, you first call `useMutationMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useMutationMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCreateNewAdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateNewAdMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [mutationMutation, { data, loading, error }] = useMutationMutation({
+ * const [createNewAdMutation, { data, loading, error }] = useCreateNewAdMutation({
  *   variables: {
  *      data: // value for 'data'
  *   },
  * });
  */
-export function useMutationMutation(baseOptions?: Apollo.MutationHookOptions<MutationMutation, MutationMutationVariables>) {
+export function useCreateNewAdMutation(baseOptions?: Apollo.MutationHookOptions<CreateNewAdMutation, CreateNewAdMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<MutationMutation, MutationMutationVariables>(MutationDocument, options);
+        return Apollo.useMutation<CreateNewAdMutation, CreateNewAdMutationVariables>(CreateNewAdDocument, options);
       }
-export type MutationMutationHookResult = ReturnType<typeof useMutationMutation>;
-export type MutationMutationResult = Apollo.MutationResult<MutationMutation>;
-export type MutationMutationOptions = Apollo.BaseMutationOptions<MutationMutation, MutationMutationVariables>;
+export type CreateNewAdMutationHookResult = ReturnType<typeof useCreateNewAdMutation>;
+export type CreateNewAdMutationResult = Apollo.MutationResult<CreateNewAdMutation>;
+export type CreateNewAdMutationOptions = Apollo.BaseMutationOptions<CreateNewAdMutation, CreateNewAdMutationVariables>;
 export const UpdateAdDocument = gql`
     mutation UpdateAd($data: UpdateAdInput!) {
   updateAd(data: $data) {
@@ -271,6 +278,37 @@ export function useUpdateAdMutation(baseOptions?: Apollo.MutationHookOptions<Upd
 export type UpdateAdMutationHookResult = ReturnType<typeof useUpdateAdMutation>;
 export type UpdateAdMutationResult = Apollo.MutationResult<UpdateAdMutation>;
 export type UpdateAdMutationOptions = Apollo.BaseMutationOptions<UpdateAdMutation, UpdateAdMutationVariables>;
+export const RemoveAdDocument = gql`
+    mutation RemoveAd($removeAdId: Float!) {
+  removeAd(id: $removeAdId)
+}
+    `;
+export type RemoveAdMutationFn = Apollo.MutationFunction<RemoveAdMutation, RemoveAdMutationVariables>;
+
+/**
+ * __useRemoveAdMutation__
+ *
+ * To run a mutation, you first call `useRemoveAdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveAdMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeAdMutation, { data, loading, error }] = useRemoveAdMutation({
+ *   variables: {
+ *      removeAdId: // value for 'removeAdId'
+ *   },
+ * });
+ */
+export function useRemoveAdMutation(baseOptions?: Apollo.MutationHookOptions<RemoveAdMutation, RemoveAdMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveAdMutation, RemoveAdMutationVariables>(RemoveAdDocument, options);
+      }
+export type RemoveAdMutationHookResult = ReturnType<typeof useRemoveAdMutation>;
+export type RemoveAdMutationResult = Apollo.MutationResult<RemoveAdMutation>;
+export type RemoveAdMutationOptions = Apollo.BaseMutationOptions<RemoveAdMutation, RemoveAdMutationVariables>;
 export const GetAllAdsDocument = gql`
     query GetAllAds {
   getAllAds {

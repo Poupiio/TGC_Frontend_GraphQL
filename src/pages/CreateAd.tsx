@@ -1,15 +1,13 @@
-import { useMutation } from '@apollo/client';
 import { useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form"
 import { toast } from "react-toastify";
-import { CREATE_AD } from '../graphql/mutations';
-import { Category, Tag } from '../generated/graphql-types';
-import { useGetAllCategoriesAndTagsQuery } from "../generated/graphql-types";
+import { Category, Tag, useCreateNewAdMutation, useGetAllCategoriesAndTagsQuery } from '../generated/graphql-types';
+import { GET_ALL_ADS } from '../graphql/queries';
 
 export type FormValues = {
    title: string
    description: string,
-   category: number,
+   category: string,
    price: string,
    pictures: { url: string }[],
    location: string,
@@ -19,13 +17,17 @@ export type FormValues = {
 
 const CreateAd = () => {
    const navigate = useNavigate();
+
+   // Utilisation du hook généré : data est directement typé, qui contient getAllCategories et getAllTags
    const { loading, error, data } = useGetAllCategoriesAndTagsQuery();
-   const [createNewAd] = useMutation(CREATE_AD);
+   const [createNewAd] = useCreateNewAdMutation({ 
+      refetchQueries: [GET_ALL_ADS]
+   });
 
    const { register, handleSubmit, control, formState: { errors }  } = useForm<FormValues>({defaultValues: {
       title: "Titre de mon annonce",
       description: "Description de mon annonce",
-      category: 6,
+      category: "6",
       price: "10",
       pictures: [
          {
@@ -49,8 +51,6 @@ const CreateAd = () => {
             price: parseInt(formData.price),
             tags: formData.tags ? formData.tags.map((tagID) => ({ id: parseInt(tagID) })) : []
          };
-         console.log("data for backend", formData);
-
          await createNewAd({
             variables: { data: dataForBackend }
          });
@@ -64,9 +64,8 @@ const CreateAd = () => {
    
    }
 
-   
    if (loading) return 'Submitting...';
-   if (error) return <p>Error in Categories: {error.message}</p>;
+   if (error) return <p>Error: {error.message}</p>;
 
    if (data) {
       return (

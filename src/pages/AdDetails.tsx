@@ -1,21 +1,30 @@
 import { useQuery } from "@apollo/client";
-import { Link, useParams } from "react-router-dom";
-import { GET_AD_BY_ID } from "../graphql/queries";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { GET_AD_BY_ID, GET_ALL_ADS } from "../graphql/queries";
 import Tag from "../components/Tag";
+import { useRemoveAdMutation } from "../generated/graphql-types";
 
 
 const AdDetails = () => {
    const { id } = useParams();
+   const navigate = useNavigate();
    
    const { loading, error, data } = useQuery(GET_AD_BY_ID, {
       variables: { getAdByIdId: parseFloat(id!) }
+   });
+   const [deleteAdById] = useRemoveAdMutation({
+      variables: { removeAdId: parseInt(id as string) }
    });
 
    if (loading) return <p>Loading...</p>;
    if (error) return <p>Error : {error.message}</p>;
 
    const handleDelete = async () => {
-      console.log(`Annonce à supprimer ${id}`);
+      await deleteAdById({
+         refetchQueries: [GET_ALL_ADS],
+         awaitRefetchQueries: true,
+      });
+      navigate("/");
    };
 
    return (
